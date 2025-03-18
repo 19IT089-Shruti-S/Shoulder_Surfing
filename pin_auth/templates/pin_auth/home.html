@@ -1,0 +1,22 @@
+{% extends 'pin_auth/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="success-container">
+        <div class="success-icon">✓</div>
+        <h2>Successfully Logged In</h2>
+        <p>Welcome back, {{ user.name }}! You have successfully authenticated.</p>
+        
+        <div class="login-stats">
+            <h3>Login Stats</h3>
+            <p>Time taken to enter PIN: {{ request.session.last_login_time|floatformat:2 }} seconds</p>
+            <p>Total number of attempts: {{ request.session.login_attempts }}</p>
+        </div>
+        
+        <div class="home-actions">
+            <a href="{% url 'logout' %}" class="button">Logout</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

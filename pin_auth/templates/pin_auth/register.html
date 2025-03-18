@@ -1,0 +1,125 @@
+{% extends 'pin_auth/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="auth-container">
+    <h2>Register New Account</h2>
+    
+    <form method="post" class="auth-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="id_name">Name:</label>
+            {{ form.name }}
+        </div>
+        
+        <div class="form-group">
+            <label>PIN:</label>
+            <div class="pin-display" id="pin-display">****</div>
+            {{ form.pin }}
+        </div>
+        
+        <div class="keypad-container">
+            <div class="keypad" id="keypad">
+                {% for i in "0123456789" %}
+                <button type="button" class="keypad-button" data-value="{{ i }}">{{ i }}</button>
+                {% endfor %}
+                <button type="button" class="keypad-button clear-button" id="clear-button">Clear</button>
+            </div>
+        </div>
+        
+        <button type="submit" class="submit-button">Register</button>
+    </form>
+    
+    <div class="auth-links">
+        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const pinInput = document.getElementById('id_pin');
+        const pinDisplay = document.getElementById('pin-display');
+        const keypad = document.getElementById('keypad');
+        const clearButton = document.getElementById('clear-button');
+        let currentPin = '';
+
+        keypad.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('keypad-button')) return;
+            
+            if (e.target.classList.contains('clear-button')) {
+                currentPin = '';
+            } else if (currentPin.length < 4) {
+                currentPin += e.target.dataset.value;
+            }
+            updatePinDisplay();
+            pinInput.value = currentPin;
+        });
+        
+        function updatePinDisplay() {
+            let display = '';
+            for (let i = 0; i < 4; i++) {
+                if (i < currentPin.length) {
+                    display += '•';
+                } else {
+                    display += '*';
+                }
+            }
+            pinDisplay.textContent = display;
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+    const pinInput = document.getElementById('id_pin');
+    const pinDisplay = document.getElementById('pin-display');
+    const keypad = document.getElementById('keypad');
+    let currentPin = '';
+    keypad.innerHTML = '';
+    for (let i = 1; i <= 9; i++) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'keypad-button';
+        button.dataset.value = i;
+        button.textContent = i;
+        keypad.appendChild(button);
+    }
+    const emptySpace = document.createElement('div');
+    emptySpace.className = 'keypad-empty-space';
+    keypad.appendChild(emptySpace);
+    const zeroButton = document.createElement('button');
+    zeroButton.type = 'button';
+    zeroButton.className = 'keypad-button zero-button';
+    zeroButton.dataset.value = 0;
+    zeroButton.textContent = 0;
+    keypad.appendChild(zeroButton);
+    const clearButton = document.createElement('button');
+    clearButton.type = 'button';
+    clearButton.className = 'keypad-button clear-button';
+    clearButton.id = 'clear-button';
+    clearButton.textContent = 'Clear';
+    keypad.appendChild(clearButton);
+    keypad.addEventListener('click', function(e) {
+        if (!e.target.classList.contains('keypad-button')) return;
+        
+        if (e.target.classList.contains('clear-button')) {
+            currentPin = '';
+        } else if (currentPin.length < 4) {
+            currentPin += e.target.dataset.value;
+        }
+        updatePinDisplay();
+        pinInput.value = currentPin;
+    });
+    
+    function updatePinDisplay() {
+        let display = '';
+        for (let i = 0; i < 4; i++) {
+            if (i < currentPin.length) {
+                display += '•';
+            } else {
+                display += '*';
+            }
+        }
+        pinDisplay.textContent = display;
+    }
+});
+</script>
+{% endblock %}
